@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">Genshin Impact</string>
+    <string name="five_star_character">五星角色</string>
+    <string name="four_star_character">四星角色</string>
+    <string name="five_star_character_display">五星角色展示</string>
+    <string name="four_star_character_display">四星角色展示</string>
+    <string name="get_detailed_number">获取详细数量</string>
+    <string name="enter_data_analysis">进入数据分析</string>
+    <string name="uid_name">UID</string>
+    <string name="five_star_number">五星抽取数量</string>
+    <string name="four_weapon_display">四星武器展示</string>
+    <string name="five_weapon_display">五星武器展示</string>
+    <string name="get_data">获取数据</string>
+    <string name="get_url">获取URL</string>
+</resources>
