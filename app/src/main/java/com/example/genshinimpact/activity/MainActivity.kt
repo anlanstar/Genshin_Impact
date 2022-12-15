@@ -11,6 +11,7 @@ import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.genshinimpact.DataApplication
 import com.example.genshinimpact.LoadingDialog
 import com.example.genshinimpact.databinding.ActivityMainBinding
 import com.example.genshinimpact.entry.CardPool
@@ -20,23 +21,21 @@ import com.google.gson.Gson
 
 
 class MainActivity : AppCompatActivity(), View.OnClickListener {
-    private lateinit var residentPool: ArrayList<CardPool>
-    private lateinit var weaponPool: ArrayList<CardPool>
-    private lateinit var rolePool: ArrayList<CardPool>
     private lateinit var queryParameter: String
     lateinit var dialog: Dialog
+    private lateinit var applicationA: DataApplication
     lateinit var mainBinding: ActivityMainBinding
     private val handler = object : Handler(Looper.getMainLooper()) {
         var number = 1
         override fun handleMessage(msg: Message) {
             if (msg.what == 1) {
-                residentPool.add(msg.obj as CardPool)
+                applicationA.residentPool.addAll((msg.obj as CardPool).data.list)
             }
             if (msg.what == 2) {
-                weaponPool.add(msg.obj as CardPool)
+                applicationA.weaponPool.addAll((msg.obj as CardPool).data.list)
             }
             if (msg.what == 3) {
-                rolePool.add(msg.obj as CardPool)
+                applicationA.rolePool.addAll((msg.obj as CardPool).data.list)
             }
             if (msg.what == 4) {
                 if (number++ >= 4) {
@@ -60,12 +59,17 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun initData() {
-        residentPool = ArrayList()
-        weaponPool = ArrayList()
-        rolePool = ArrayList()
+//        residentPool = ArrayList()
+//        weaponPool = ArrayList()
+//        rolePool = ArrayList()
 
         val uri = Uri.parse(mainBinding.evLink.text.toString())
         queryParameter = uri.getQueryParameter("authkey").toString()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        applicationA = application as DataApplication
     }
 
     override fun onClick(view: View?) {
@@ -89,37 +93,36 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             Thread { DataRequest.settingNetwork(queryParameter, 302, handler, 2) }.start()
             Thread { DataRequest.settingNetwork(queryParameter, 301, handler, 3) }.start()
 
-
             mainBinding.btnGetData.visibility = View.GONE
 
         } else if (view == mainBinding.btnGetNum) {
-
+            Log.i("TAG", "applicationA.residentPool: ${applicationA.residentPool.size}")
             mainBinding.btnGetUrl.visibility = View.VISIBLE
             mainBinding.btnGetData.visibility = View.GONE
             mainBinding.btnGetNum.visibility = View.GONE
 
-            val residentPoolTmp = ArrayList<SpecificInfo>()
-            val weaponPoolTmp = ArrayList<SpecificInfo>()
-            val rolePoolTmp = ArrayList<SpecificInfo>()
+//            val residentPoolTmp = ArrayList<SpecificInfo>()
+//            val weaponPoolTmp = ArrayList<SpecificInfo>()
+//            val rolePoolTmp = ArrayList<SpecificInfo>()
 
-            for (i in residentPool) {
-                residentPoolTmp.addAll(i.data.list)
-            }
-            for (i in weaponPool) {
-                weaponPoolTmp.addAll(i.data.list)
-            }
-            for (i in rolePool) {
-                rolePoolTmp.addAll(i.data.list)
-            }
+//            for (i in residentPool) {
+//                residentPoolTmp.addAll(i.data.list)
+//            }
+//            for (i in weaponPool) {
+//                weaponPoolTmp.addAll(i.data.list)
+//            }
+//            for (i in rolePool) {
+//                rolePoolTmp.addAll(i.data.list)
+//            }
 
-            Log.i("TAG", "常驻池: ${residentPoolTmp.size}")
-            Log.i("TAG", "武器池: ${weaponPoolTmp.size}")
-            Log.i("TAG", "角色池: ${rolePoolTmp.size}")
+//            Log.i("TAG", "常驻池: ${residentPoolTmp.size}")
+//            Log.i("TAG", "武器池: ${weaponPoolTmp.size}")
+//            Log.i("TAG", "角色池: ${rolePoolTmp.size}")
 
             val intent = Intent(this, ProgressActivity::class.java)
-            intent.putExtra("residentPool", Gson().toJson(residentPoolTmp))
-            intent.putExtra("weaponPool", Gson().toJson(weaponPoolTmp))
-            intent.putExtra("rolePool", Gson().toJson(rolePoolTmp))
+//            intent.putExtra("residentPool", Gson().toJson(residentPoolTmp))
+//            intent.putExtra("weaponPool", Gson().toJson(weaponPoolTmp))
+//            intent.putExtra("rolePool", Gson().toJson(rolePoolTmp))
             startActivity(intent)
         }
     }
